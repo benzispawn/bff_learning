@@ -1,0 +1,37 @@
+{
+  "name": "hands-on-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "workspaces": [
+    "microservices/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @hands-on-project/one && npm run build --workspace @hands-on-project/two",
+    "one:dev": "npm run start:dev --workspace @hands-on-project/one",
+    "two:dev": "npm run start:dev --workspace @hands-on-project/two",
+    "start:all": "npm run start --workspace @hands-on-project/one & npm run start --workspace @hands-on-project/two",
+    "gen-env": "node scripts/gen-env.js",
+    "lint": "npm run lint --workspace @hands-on-project/one && npm run lint --workspace @hands-on-project/two",
+    "lint:fix": "npm run lint:fix --workspace @hands-on-project/one && npm run lint:fix --workspace @hands-on-project/two",
+    "test": "npm run test --workspace @hands-on-project/one && npm run test --workspace @hands-on-project/two",
+    "test:e2e:one": "npm run test:e2e --workspace @hands-on-project/one",
+    "test:e2e:one:record-snapshot": "npm run test:e2e:record --workspace @hands-on-project/one",
+    "test:e2e:one:record-fixture": "npm run test:e2e:record-fixture --workspace @hands-on-project/one"
+  },
+  "keywords": [],
+  "author": "Team 2",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/swagger": "^11.2.4",
+    "axios": "^1.13.2",
+    "class-validator": "^0.14.3",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": "24.13.0"
+  },
+  "description": ""
+}

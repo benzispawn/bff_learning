@@ -1,0 +1,45 @@
+services:
+
+  # one:
+  #   container_name: api-one
+  #   hostname: one
+  #   build: './microservices/one'
+  #   ports:
+  #     - '${ONE_API_PORT-3001}:3001'
+  #   restart: on-failure
+  #   depends_on:
+  #     - mongo
+    
+  # two:
+  #   container_name: api-two
+  #   depends_on:
+  #     - one
+  #   restart: on-failure
+  #   build: './microservices/two'
+  #   hostname: two
+  #   ports:
+  #     - '${TWO_API_PORT-3002}:3002'
+
+  mongo:
+    container_name: mongo-host
+    image: mongo:4.4.6
+    ports: 
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USER-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_PASSWORD-mongosecretpass}
+  
+  mongo-express:
+    container_name: mongo-express
+    depends_on:
+      - mongo
+    image: mongo-express
+    ports:
+      - ${MONGO_EXPRESS_PORT-3003}:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER-root}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD-mongosecretpass}
+      ME_CONFIG_MONGODB_SERVER: mongo-host
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_DB_USER-root}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_DB_PASSWORD-mongosecretpass}

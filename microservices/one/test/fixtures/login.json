@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/login",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "username": "trailblazers",
+      "password": "12345"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "username": "trailblazers"
+    }
+  }
+}

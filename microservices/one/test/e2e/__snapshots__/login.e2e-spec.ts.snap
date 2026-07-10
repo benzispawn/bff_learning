@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login E2E (happy path) POST /api/v1/login 1`] = `
+{
+  "body": {
+    "username": "trailblazers",
+  },
+  "status": 200,
+}
+`;
