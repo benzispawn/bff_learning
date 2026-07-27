@@ -8,11 +8,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoginModule } from './api/v1/login/login.module';
 import { HomeModule } from './api/v1/home/home.module';
+import { LearningTrailModule } from './api/v1/learning-trail/learning-trail.module';
+
+const mongoUrl = process.env.MONGO_URL ?? 'mongodb://root:mongosecretpass@mongo-host';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
-    MongooseModule.forRoot(process.env.MONGO_URL),
+    MongooseModule.forRoot(mongoUrl),
     JwtModule.register({
       global: true,
       secret: getRequiredEnv('JWT_SECRET_KEY'),
@@ -20,6 +23,7 @@ import { HomeModule } from './api/v1/home/home.module';
     }),
     LoginModule,
     HomeModule,
+    LearningTrailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

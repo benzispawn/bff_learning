@@ -25,9 +25,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
         'An error occured';
     }
 
-    if (typeof message === 'object') message = message?.message;
+    if (typeof message === 'object') {
+      message = message?.message ?? message;
+    }
 
-    response.status(status).send({
+    response.status(status).json({
       timestamp: new Date().toISOString(),
       path: request.url,
       error: message,
