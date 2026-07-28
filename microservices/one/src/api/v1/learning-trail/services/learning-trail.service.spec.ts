@@ -93,6 +93,12 @@ describe('LearningTrailService', () => {
     expect(result).toMatchObject({ strategy: 'aggressive' });
   });
 
+  it('should fallback to a moderate strategy when risk level is unknown', async () => {
+    const result = await service.getRecommendation('unknown');
+
+    expect(result).toMatchObject({ strategy: 'moderate' });
+  });
+
   it('should honor feature flags on decorated methods', async () => {
     process.env.FEATURE_FLAGS = 'learning-trail';
 

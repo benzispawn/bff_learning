@@ -5,35 +5,15 @@ import { UpdateProfilePreferencesDTO } from '../interfaces/profile-preferences.d
 import { FeatureFlag } from './feature-flag.decorator';
 import { CacheService } from './cache.service';
 import { runMigrations } from '../migrations/presentation.seed';
+import {
+  AggressiveStrategy,
+  ConservativeStrategy,
+  ModerateStrategy,
+  RecommendationStrategy,
+} from './recommendation-strategy';
 
 export const PRESENTATION_MODEL = 'PRESENTATION_MODEL';
 export const RESEARCH_MODEL = 'RESEARCH_MODEL';
-
-interface RecommendationStrategy {
-  name: string;
-  execute(riskLevel: string): { strategy: string; riskLevel: string };
-}
-
-class ConservativeStrategy implements RecommendationStrategy {
-  name = 'conservative';
-  execute(riskLevel: string) {
-    return { strategy: this.name, riskLevel };
-  }
-}
-
-class ModerateStrategy implements RecommendationStrategy {
-  name = 'moderate';
-  execute(riskLevel: string) {
-    return { strategy: this.name, riskLevel };
-  }
-}
-
-class AggressiveStrategy implements RecommendationStrategy {
-  name = 'aggressive';
-  execute(riskLevel: string) {
-    return { strategy: this.name, riskLevel };
-  }
-}
 
 @Injectable()
 export class LearningTrailService {
