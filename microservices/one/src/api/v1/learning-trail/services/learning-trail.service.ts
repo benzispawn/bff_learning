@@ -4,15 +4,10 @@ import { NotificationDTO } from '../interfaces/notification.dto';
 import { UpdateProfilePreferencesDTO } from '../interfaces/profile-preferences.dto';
 import { FeatureFlag } from './feature-flag.decorator';
 import { CacheService } from './cache.service';
+import { runMigrations } from '../migrations/presentation.seed';
 
 export const PRESENTATION_MODEL = 'PRESENTATION_MODEL';
 export const RESEARCH_MODEL = 'RESEARCH_MODEL';
-
-const presentationData = {
-  primaryText: 'We are committed to building a multicultural, inclusive company.',
-  carousel: [],
-  buttonText: 'Continue',
-};
 
 interface RecommendationStrategy {
   name: string;
@@ -118,9 +113,6 @@ export class LearningTrailService {
   }
 
   private async ensurePresentationSeed(): Promise<void> {
-    const existing = await this.presentationModel.findOne({});
-    if (!existing) {
-      await this.presentationModel.insertMany([presentationData]);
-    }
+    await runMigrations(this.presentationModel);
   }
 }

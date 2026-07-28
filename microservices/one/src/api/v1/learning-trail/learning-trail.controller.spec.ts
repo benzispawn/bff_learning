@@ -4,7 +4,7 @@ import { LearningTrailService } from './services/learning-trail.service';
 
 describe('LearningTrailController', () => {
   let controller: LearningTrailController;
-  let service: { getPresentation: jest.Mock; getResearch: jest.Mock; getDashboard: jest.Mock; createNotification: jest.Mock; getProfilePreferences: jest.Mock; updateProfilePreferences: jest.Mock; getRecommendation: jest.Mock };
+  let service: { getPresentation: jest.Mock; getResearch: jest.Mock; getDashboard: jest.Mock; createNotification: jest.Mock; getNotifications: jest.Mock; getProfilePreferences: jest.Mock; updateProfilePreferences: jest.Mock; getRecommendation: jest.Mock };
 
   beforeEach(async () => {
     service = {
@@ -12,6 +12,7 @@ describe('LearningTrailController', () => {
       getResearch: jest.fn(),
       getDashboard: jest.fn(),
       createNotification: jest.fn(),
+      getNotifications: jest.fn(),
       getProfilePreferences: jest.fn(),
       updateProfilePreferences: jest.fn(),
       getRecommendation: jest.fn(),
@@ -44,5 +45,11 @@ describe('LearningTrailController', () => {
     service.getProfilePreferences.mockResolvedValue({ theme: 'dark', language: 'pt-BR' });
 
     await expect(controller.getProfilePreferences()).resolves.toEqual({ theme: 'dark', language: 'pt-BR' });
+  });
+
+  it('should return notifications from the service', async () => {
+    service.getNotifications.mockResolvedValue([{ message: 'Hello', type: 'info' }]);
+
+    await expect(controller.getNotifications()).resolves.toEqual([{ message: 'Hello', type: 'info' }]);
   });
 });

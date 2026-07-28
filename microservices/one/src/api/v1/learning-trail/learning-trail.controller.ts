@@ -34,6 +34,11 @@ export class LearningTrailController {
     return this.learningTrailService.createNotification(dto);
   }
 
+  @Get('notifications')
+  async getNotifications() {
+    return this.learningTrailService.getNotifications();
+  }
+
   @Get('profile/preferences')
   async getProfilePreferences() {
     return this.learningTrailService.getProfilePreferences();
