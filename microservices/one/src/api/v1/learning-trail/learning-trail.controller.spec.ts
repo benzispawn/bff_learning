@@ -4,7 +4,7 @@ import { LearningTrailService } from './services/learning-trail.service';
 
 describe('LearningTrailController', () => {
   let controller: LearningTrailController;
-  let service: { getPresentation: jest.Mock; getResearch: jest.Mock; getDashboard: jest.Mock; createNotification: jest.Mock; updateProfilePreferences: jest.Mock; getRecommendation: jest.Mock };
+  let service: { getPresentation: jest.Mock; getResearch: jest.Mock; getDashboard: jest.Mock; createNotification: jest.Mock; getProfilePreferences: jest.Mock; updateProfilePreferences: jest.Mock; getRecommendation: jest.Mock };
 
   beforeEach(async () => {
     service = {
@@ -12,6 +12,7 @@ describe('LearningTrailController', () => {
       getResearch: jest.fn(),
       getDashboard: jest.fn(),
       createNotification: jest.fn(),
+      getProfilePreferences: jest.fn(),
       updateProfilePreferences: jest.fn(),
       getRecommendation: jest.fn(),
     };
@@ -37,5 +38,11 @@ describe('LearningTrailController', () => {
   it('should return dashboard data', async () => {
     service.getDashboard.mockResolvedValue({ presentation: {}, research: {} });
     await expect(controller.getDashboard()).resolves.toEqual({ presentation: {}, research: {} });
+  });
+
+  it('should return profile preferences from the service', async () => {
+    service.getProfilePreferences.mockResolvedValue({ theme: 'dark', language: 'pt-BR' });
+
+    await expect(controller.getProfilePreferences()).resolves.toEqual({ theme: 'dark', language: 'pt-BR' });
   });
 });
