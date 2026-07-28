@@ -84,6 +84,10 @@ export class LearningTrailService {
     return this.profilePreferences;
   }
 
+  resetProfilePreferences(): void {
+    Object.keys(this.profilePreferences).forEach((key) => delete this.profilePreferences[key as keyof UpdateProfilePreferencesDTO]);
+  }
+
   async getDashboard(): Promise<{ presentation: unknown; research: unknown }> {
     const [presentation, research] = await Promise.all([
       this.getPresentation(),

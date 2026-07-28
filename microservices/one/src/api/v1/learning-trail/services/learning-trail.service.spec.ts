@@ -67,6 +67,14 @@ describe('LearningTrailService', () => {
     expect(service.getProfilePreferences()).toEqual(dto);
   });
 
+  it('should reset profile preferences when requested', async () => {
+    await service.updateProfilePreferences({ theme: 'dark', language: 'pt-BR' });
+
+    service.resetProfilePreferences();
+
+    expect(service.getProfilePreferences()).toEqual({});
+  });
+
   it('should aggregate presentation and research in a dashboard response', async () => {
     httpTwoService.get.mockResolvedValue({ primaryText: 'Hello' });
     researchModel.findOne.mockResolvedValue({ title: 'Research' });

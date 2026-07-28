@@ -9,3 +9,8 @@ export class UpdateProfilePreferencesDTO {
   @IsString()
   language?: string;
 }
+
+export class ProfilePreferencesResponseDTO {
+  theme?: string;
+  language?: string;
+}
