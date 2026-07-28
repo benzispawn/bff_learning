@@ -14,7 +14,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -23,7 +23,8 @@
     "test:e2e:record": "jest --config ./test/jest-e2e.json -u",
     "test:e2e:login:record-snapshot": "jest --config ./test/jest-e2e.json --testPathPattern login.e2e-spec.ts -u",
     "test:e2e:record-fixture": "node -r ts-node/register test/e2e/record-fixture.ts",
-    "test:e2e:login:record-fixture": "node -r ts-node/register test/e2e/record-fixture.ts login"
+    "test:e2e:login:record-fixture": "node -r ts-node/register test/e2e/record-fixture.ts login",
+    "test:e2e:ex06": "tap --no-coverage --ts -t=0 src/exercises/06-tap-e2e/e2e/accounts.e2e-spec.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -59,6 +60,8 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.5.0",
+    "nock": "^13.5.0",
+    "tap": "^18.0.0",
     "mongodb-memory-server": "^11.0.1",
     "prettier": "^3.0.0",
     "source-map-support": "^0.5.21",
