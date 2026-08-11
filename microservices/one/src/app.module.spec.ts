@@ -38,7 +38,13 @@ jest.mock('@nestjs/jwt', () => ({
 }));
 
 jest.mock('./common/helpers/get-required-env', () => ({
-  getRequiredEnv: jest.fn(() => 'mocked-jwt-secret'),
+  getRequiredEnv: jest.fn((key: string) => {
+    if (key === 'MONGO_URL') {
+      return 'mongodb://localhost:27017/test-db';
+    }
+
+    return 'mocked-jwt-secret';
+  }),
 }));
 
 // Mock the other modules
@@ -82,7 +88,7 @@ describe('AppModule', () => {
 
   it('should import MongooseModule with correct connection string', () => {
     expect(MongooseModule.forRoot).toHaveBeenCalledWith(
-      'mongodb://root:mongosecretpass@mongo-host',
+      'mongodb://localhost:27017/test-db',
     );
   });
 

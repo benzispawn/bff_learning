@@ -17,7 +17,8 @@ export class AccountsStore {
   }
 
   findOne(id: string): Account | undefined {
-    return this.accounts.find((account) => account.id === id);
+    const account = this.accounts.find((item) => item.id === id);
+    return account ? { ...account } : undefined;
   }
 
   create(account: Account): Account {

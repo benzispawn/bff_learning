@@ -22,7 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message =
         exception?.message ??
         exception?.response?.message ??
-        'An error occured';
+        'An error occurred';
     }
 
     if (typeof message === 'object') {

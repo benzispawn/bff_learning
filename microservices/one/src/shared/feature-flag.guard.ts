@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 
@@ -22,7 +22,7 @@ export class FeatureFlagGuard implements CanActivate {
 
     const enabled = (process.env.FEATURE_FLAGS ?? '').split(',').map((flag) => flag.trim()).filter(Boolean);
     if (!enabled.includes(flagName)) {
-      throw new UnauthorizedException(`Feature flag ${flagName} is disabled`);
+      throw new ForbiddenException(`Feature flag ${flagName} is disabled`);
     }
 
     return true;

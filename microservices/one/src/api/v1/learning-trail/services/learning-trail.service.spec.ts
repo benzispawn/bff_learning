@@ -9,6 +9,11 @@ describe('LearningTrailService', () => {
   let httpTwoService: { get: jest.Mock; post: jest.Mock };
   let presentationModel: { findOne: jest.Mock; deleteMany: jest.Mock; insertMany: jest.Mock };
   let researchModel: { findOne: jest.Mock; deleteMany: jest.Mock; insertMany: jest.Mock };
+  let previousFeatureFlags: string | undefined;
+
+  beforeEach(() => {
+    previousFeatureFlags = process.env.FEATURE_FLAGS;
+  });
 
   beforeEach(() => {
     httpTwoService = {
@@ -31,6 +36,15 @@ describe('LearningTrailService', () => {
       presentationModel as any,
       researchModel as any,
     );
+  });
+
+  afterEach(() => {
+    if (previousFeatureFlags === undefined) {
+      delete process.env.FEATURE_FLAGS;
+      return;
+    }
+
+    process.env.FEATURE_FLAGS = previousFeatureFlags;
   });
 
   it('should return presentation data from seed and persist it', async () => {
