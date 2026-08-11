@@ -1,24 +1,34 @@
 import { NestFactory } from '@nestjs/core';
-import { Module, Controller, Get, Injectable } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { FastifyAdapter } from '@nestjs/platform-fastify';
+import { AccountsController06 } from '../accounts.controller';
 import { AccountsServiceE2E } from '../accounts.service';
 import { HttpClientService } from '../../../core/http/http-client.service';
 
-@Controller('accounts')
-class TestController {
-  @Get()
-  get() {
-    return { ok: true };
-  }
-}
+const mockHttpClientService: Pick<HttpClientService, 'get'> = {
+  get: async () => ({
+    accounts: [
+      { id: 'acc-1', name: 'Primary' },
+      { id: 'acc-2', name: 'Savings' },
+    ],
+  }),
+};
 
 @Module({
-  controllers: [TestController],
-  providers: [AccountsServiceE2E, HttpClientService],
+  controllers: [AccountsController06],
+  providers: [
+    AccountsServiceE2E,
+    {
+      provide: HttpClientService,
+      useValue: mockHttpClientService,
+    },
+  ],
 })
 class TestModule {}
 
 export async function bootstrapTestServer() {
-  const app = await NestFactory.create(TestModule);
-  await app.listen(0);
+  const app = await NestFactory.create(TestModule, new FastifyAdapter());
+  await app.init();
+  await app.getHttpAdapter().getInstance().ready();
   return app;
 }
