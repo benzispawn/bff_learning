@@ -24,7 +24,7 @@
     "test:e2e:login:record-snapshot": "jest --config ./test/jest-e2e.json --testPathPattern login.e2e-spec.ts -u",
     "test:e2e:record-fixture": "node -r ts-node/register test/e2e/record-fixture.ts",
     "test:e2e:login:record-fixture": "node -r ts-node/register test/e2e/record-fixture.ts login",
-    "test:e2e:ex06": "tap --no-coverage --ts -t=0 src/exercises/06-tap-e2e/e2e/accounts.e2e-spec.ts"
+    "test:e2e:ex06": "tap --disable-coverage --timeout=0 --tsconfig ./tsconfig.tap.json src/exercises/06-tap-e2e/e2e/accounts.e2e-spec.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
