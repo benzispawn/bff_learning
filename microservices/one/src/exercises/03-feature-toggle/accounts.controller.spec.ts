@@ -7,6 +7,11 @@ import { FeatureFlagGuard } from '../../shared/feature-flag.guard';
 
 describe('AccountsController03', () => {
   let controller: AccountsController03;
+  let previousFeatureFlags: string | undefined;
+
+  beforeEach(() => {
+    previousFeatureFlags = process.env.FEATURE_FLAGS;
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -15,6 +20,15 @@ describe('AccountsController03', () => {
     }).compile();
 
     controller = module.get<AccountsController03>(AccountsController03);
+  });
+
+  afterEach(() => {
+    if (previousFeatureFlags === undefined) {
+      delete process.env.FEATURE_FLAGS;
+      return;
+    }
+
+    process.env.FEATURE_FLAGS = previousFeatureFlags;
   });
 
   it('should return all accounts', () => {

@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoginModule } from './api/v1/login/login.module';
 import { HomeModule } from './api/v1/home/home.module';
+import { LearningTrailModule } from './api/v1/learning-trail/learning-trail.module';
 
 jest.mock('@nestjs/config', () => ({
   ConfigModule: {
@@ -38,7 +39,13 @@ jest.mock('@nestjs/jwt', () => ({
 }));
 
 jest.mock('./common/helpers/get-required-env', () => ({
-  getRequiredEnv: jest.fn(() => 'mocked-jwt-secret'),
+  getRequiredEnv: jest.fn((key: string) => {
+    if (key === 'MONGO_URL') {
+      return 'mongodb://localhost:27017/test-db';
+    }
+
+    return 'mocked-jwt-secret';
+  }),
 }));
 
 // Mock the other modules
@@ -48,6 +55,10 @@ jest.mock('./api/v1/login/login.module', () => ({
 
 jest.mock('./api/v1/home/home.module', () => ({
   HomeModule: class MockHomeModule {},
+}));
+
+jest.mock('./api/v1/learning-trail/learning-trail.module', () => ({
+  LearningTrailModule: class MockLearningTrailModule {},
 }));
 
 describe('AppModule', () => {
@@ -82,7 +93,7 @@ describe('AppModule', () => {
 
   it('should import MongooseModule with correct connection string', () => {
     expect(MongooseModule.forRoot).toHaveBeenCalledWith(
-      'mongodb://root:mongosecretpass@mongo-host',
+      'mongodb://localhost:27017/test-db',
     );
   });
 
@@ -102,6 +113,11 @@ describe('AppModule', () => {
   it('should import HomeModule', () => {
     const homeModule = module.get(HomeModule);
     expect(homeModule).toBeDefined();
+  });
+
+  it('should import LearningTrailModule', () => {
+    const learningTrailModule = module.get(LearningTrailModule);
+    expect(learningTrailModule).toBeDefined();
   });
 
   it('should have AppController', () => {

@@ -9,6 +9,11 @@ describe('LearningTrailService', () => {
   let httpTwoService: { get: jest.Mock; post: jest.Mock };
   let presentationModel: { findOne: jest.Mock; deleteMany: jest.Mock; insertMany: jest.Mock };
   let researchModel: { findOne: jest.Mock; deleteMany: jest.Mock; insertMany: jest.Mock };
+  let previousFeatureFlags: string | undefined;
+
+  beforeEach(() => {
+    previousFeatureFlags = process.env.FEATURE_FLAGS;
+  });
 
   beforeEach(() => {
     httpTwoService = {
@@ -31,6 +36,15 @@ describe('LearningTrailService', () => {
       presentationModel as any,
       researchModel as any,
     );
+  });
+
+  afterEach(() => {
+    if (previousFeatureFlags === undefined) {
+      delete process.env.FEATURE_FLAGS;
+      return;
+    }
+
+    process.env.FEATURE_FLAGS = previousFeatureFlags;
   });
 
   it('should return presentation data from seed and persist it', async () => {
@@ -123,5 +137,18 @@ describe('LearningTrailService', () => {
 
     cacheService.invalidate('demo');
     expect(cacheService.get('demo')).toBeUndefined();
+  });
+
+  it('should retry async factory after a transient failure', async () => {
+    const cacheService = new CacheService();
+    const factory = jest
+      .fn<Promise<string>, []>()
+      .mockRejectedValueOnce(new Error('transient failure'))
+      .mockResolvedValueOnce('recovered');
+
+    await expect(cacheService.getOrSet('research', factory, 30)).rejects.toThrow('transient failure');
+    await expect(cacheService.getOrSet('research', factory, 30)).resolves.toBe('recovered');
+
+    expect(factory).toHaveBeenCalledTimes(2);
   });
 });

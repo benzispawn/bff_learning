@@ -10,7 +10,7 @@ import { LoginModule } from './api/v1/login/login.module';
 import { HomeModule } from './api/v1/home/home.module';
 import { LearningTrailModule } from './api/v1/learning-trail/learning-trail.module';
 
-const mongoUrl = process.env.MONGO_URL ?? 'mongodb://root:mongosecretpass@mongo-host';
+const mongoUrl = getRequiredEnv('MONGO_URL');
 
 @Module({
   imports: [

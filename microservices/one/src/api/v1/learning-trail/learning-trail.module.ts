@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
+import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { HttpTwoModule } from '../../../repositories/http-two/http-two.module';
+import { PresentationSchema } from './interfaces/presentation.schema';
+import { ResearchSchema } from './interfaces/research.schema';
 import { LearningTrailController } from './learning-trail.controller';
 import {
   LearningTrailService,
@@ -7,30 +10,26 @@ import {
   RESEARCH_MODEL,
 } from './services/learning-trail.service';
 
-const mockPresentationModel = {
-  findOne: async () => null,
-  deleteMany: async () => undefined,
-  insertMany: async () => undefined,
-};
-
-const mockResearchModel = {
-  findOne: async () => ({ title: 'Research' }),
-  deleteMany: async () => undefined,
-  insertMany: async () => undefined,
-};
-
 @Module({
-  imports: [HttpTwoModule],
+  imports: [
+    HttpTwoModule,
+    MongooseModule.forFeature([
+      { name: 'Presentation', schema: PresentationSchema },
+      { name: 'Research', schema: ResearchSchema },
+    ]),
+  ],
   controllers: [LearningTrailController],
   providers: [
     LearningTrailService,
     {
       provide: PRESENTATION_MODEL,
-      useValue: mockPresentationModel,
+      useFactory: (model: unknown) => model,
+      inject: [getModelToken('Presentation')],
     },
     {
       provide: RESEARCH_MODEL,
-      useValue: mockResearchModel,
+      useFactory: (model: unknown) => model,
+      inject: [getModelToken('Research')],
     },
   ],
 })
