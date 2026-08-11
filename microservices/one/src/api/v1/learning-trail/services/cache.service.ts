@@ -15,13 +15,27 @@ export class CacheService {
     return entry.value as T;
   }
 
-  getOrSet<T>(key: string, factory: () => T, ttlSeconds = 30): T {
+  getOrSet<T>(key: string, factory: () => T | Promise<T>, ttlSeconds = 30): T | Promise<T> {
     const cached = this.get<T>(key);
     if (cached !== undefined) {
       return cached;
     }
 
     const value = factory();
+    if (value instanceof Promise) {
+      const wrapped = value.catch((error) => {
+        this.invalidate(key);
+        throw error;
+      });
+
+      this.cache.set(key, {
+        value: wrapped,
+        expiresAt: Date.now() + ttlSeconds * 1000,
+      });
+
+      return wrapped;
+    }
+
     this.cache.set(key, { value, expiresAt: Date.now() + ttlSeconds * 1000 });
     return value;
   }

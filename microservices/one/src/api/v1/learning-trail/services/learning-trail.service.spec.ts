@@ -138,4 +138,17 @@ describe('LearningTrailService', () => {
     cacheService.invalidate('demo');
     expect(cacheService.get('demo')).toBeUndefined();
   });
+
+  it('should retry async factory after a transient failure', async () => {
+    const cacheService = new CacheService();
+    const factory = jest
+      .fn<Promise<string>, []>()
+      .mockRejectedValueOnce(new Error('transient failure'))
+      .mockResolvedValueOnce('recovered');
+
+    await expect(cacheService.getOrSet('research', factory, 30)).rejects.toThrow('transient failure');
+    await expect(cacheService.getOrSet('research', factory, 30)).resolves.toBe('recovered');
+
+    expect(factory).toHaveBeenCalledTimes(2);
+  });
 });
