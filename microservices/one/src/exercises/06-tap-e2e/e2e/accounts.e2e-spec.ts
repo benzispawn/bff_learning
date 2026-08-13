@@ -18,3 +18,19 @@ tap.test('e2e accounts endpoint', async (t) => {
     ],
   });
 });
+
+tap.test('e2e accounts endpoint returns 500 when the outbound dependency fails', async (t) => {
+  const app = await bootstrapTestServer({
+    get: async () => {
+      throw new Error('upstream failed');
+    },
+  });
+
+  t.teardown(async () => {
+    await app.close();
+  });
+
+  const response = await request(app.getHttpServer()).get('/exercises/06/accounts');
+
+  t.equal(response.status, 500);
+});
