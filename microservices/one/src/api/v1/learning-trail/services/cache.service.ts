@@ -30,6 +30,7 @@ export class CacheService {
 
       this.cache.set(key, {
         value: wrapped,
+        // TTL starts when the async work is dispatched, not when the promise resolves.
         expiresAt: Date.now() + ttlSeconds * 1000,
       });
 

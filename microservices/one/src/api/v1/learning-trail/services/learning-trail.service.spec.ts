@@ -139,6 +139,16 @@ describe('LearningTrailService', () => {
     expect(cacheService.get('demo')).toBeUndefined();
   });
 
+  it('should return the cached async result without calling the factory again', async () => {
+    const cacheService = new CacheService();
+    const factory = jest.fn<Promise<string>, []>().mockResolvedValue('cached');
+
+    await expect(cacheService.getOrSet('research', factory, 30)).resolves.toBe('cached');
+    await expect(cacheService.getOrSet('research', factory, 30)).resolves.toBe('cached');
+
+    expect(factory).toHaveBeenCalledTimes(1);
+  });
+
   it('should retry async factory after a transient failure', async () => {
     const cacheService = new CacheService();
     const factory = jest
