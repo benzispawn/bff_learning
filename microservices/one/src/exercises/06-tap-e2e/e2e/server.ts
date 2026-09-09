@@ -5,13 +5,15 @@ import { AccountsController06 } from '../accounts.controller';
 import { AccountsServiceE2E } from '../accounts.service';
 import { HttpClientService } from '../../../core/http/http-client.service';
 
+const defaultHttpClientGet = async () => ({
+  accounts: [
+    { id: 'acc-1', name: 'Primary' },
+    { id: 'acc-2', name: 'Savings' },
+  ],
+});
+
 const mockHttpClientService: Pick<HttpClientService, 'get'> = {
-  get: async () => ({
-    accounts: [
-      { id: 'acc-1', name: 'Primary' },
-      { id: 'acc-2', name: 'Savings' },
-    ],
-  }),
+  get: defaultHttpClientGet,
 };
 
 @Module({
@@ -26,7 +28,9 @@ const mockHttpClientService: Pick<HttpClientService, 'get'> = {
 })
 class TestModule {}
 
-export async function bootstrapTestServer() {
+export async function bootstrapTestServer(httpClientService?: Pick<HttpClientService, 'get'>) {
+  mockHttpClientService.get = httpClientService?.get ?? defaultHttpClientGet;
+
   const app = await NestFactory.create(TestModule, new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
